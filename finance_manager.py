@@ -183,3 +183,27 @@ class FinanceManager:
 
         for month, amount in sorted(monthly_expenses.items()):
             print(f"{month} : ₹{amount:.2f}")
+    def category_summary(self):
+        category_expenses = {}
+
+        for transaction in self.transactions:
+            if transaction["type"] == "expense":
+                category = transaction["category"]
+
+                if category not in category_expenses:
+                    category_expenses[category] = 0
+
+                category_expenses[category] += transaction["amount"]
+
+        if not category_expenses:
+            print("No expenses available for category analysis.")
+            return
+
+        print("\n===== CATEGORY SPENDING =====")
+
+        for category, amount in sorted(
+            category_expenses.items(),
+            key=lambda item: item[1],
+            reverse=True
+        ):
+            print(f"{category.title()} : ₹{amount:.2f}")
