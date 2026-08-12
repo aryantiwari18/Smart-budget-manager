@@ -9,13 +9,14 @@ def main():
     while True:
         print("\n===== SMART BUDGET MANAGER =====")
         print("1. Add Income")
-        print("2. Add Expense")
-        print("3. View Transactions")
-        print("4. View Financial Summary")
-        print("5. Set Budget")
-        print("6. View Budgets")
-        print("7. Search Expenses")
-        print("8. Exit")
+print("2. Add Expense")
+print("3. View Transactions")
+print("4. View Financial Summary")
+print("5. Set Budget")
+print("6. View Budgets")
+print("7. Search Expenses")
+print("8. Monthly Spending")
+print("9. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -40,8 +41,11 @@ def main():
             manager.search_expenses()
 
         elif choice == "8":
-            print("Thank you for using Smart Budget Manager!")
-            break
+    manager.monthly_summary()
+
+elif choice == "9":
+    print("Thank you for using Smart Budget Manager!")
+    break
 
         else:
             print("Invalid choice. Please try again.")
