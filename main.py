@@ -14,7 +14,8 @@ def main():
         print("4. View Financial Summary")
         print("5. Set Budget")
         print("6. View Budgets")
-        print("7. Exit")
+        print("7. Search Expenses")
+        print("8. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -35,8 +36,10 @@ def main():
 
         elif choice == "6":
             budget_manager.view_budgets()
-
         elif choice == "7":
+            manager.search_expenses()
+
+        elif choice == "8":
             print("Thank you for using Smart Budget Manager!")
             break
 
