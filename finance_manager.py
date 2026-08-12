@@ -7,7 +7,9 @@ class FinanceManager:
 
     def __init__(self):
         self.data_file = "transactions.json"
+        self.budget_file = "budgets.json"
         self.transactions = self.load_data()
+        self.budgets = self.load_budgets()
 
     def load_data(self):
         if os.path.exists(self.data_file):
@@ -19,13 +21,23 @@ class FinanceManager:
 
         return []
 
+    def load_budgets(self):
+        if os.path.exists(self.budget_file):
+            try:
+                with open(self.budget_file, "r") as file:
+                    return json.load(file)
+            except (json.JSONDecodeError, FileNotFoundError):
+                return {}
+
+        return {}
+
     def save_data(self):
         with open(self.data_file, "w") as file:
             json.dump(self.transactions, file, indent=4)
 
     def add_income(self):
         amount = self.get_amount("Enter income amount: ")
-        source = input("Enter income source: ")
+        source = input("Enter income source: ").strip()
 
         transaction = {
             "type": "income",
@@ -41,7 +53,7 @@ class FinanceManager:
 
     def add_expense(self):
         amount = self.get_amount("Enter expense amount: ")
-        category = input("Enter expense category: ")
+        category = input("Enter expense category: ").strip().lower()
 
         transaction = {
             "type": "expense",
@@ -54,6 +66,34 @@ class FinanceManager:
         self.save_data()
 
         print("Expense added successfully.")
+
+        self.check_budget(category)
+
+    def check_budget(self, category):
+        if category not in self.budgets:
+            return
+
+        budget = self.budgets[category]
+
+        spent = sum(
+            transaction["amount"]
+            for transaction in self.transactions
+            if transaction["type"] == "expense"
+            and transaction["category"].lower() == category
+        )
+
+        remaining = budget - spent
+
+        print(f"\nBudget for {category.title()}: ₹{budget:.2f}")
+        print(f"Spent: ₹{spent:.2f}")
+        print(f"Remaining: ₹{remaining:.2f}")
+
+        if spent > budget:
+            print("⚠️ ALERT: Budget exceeded!")
+
+        elif spent >= budget * 0.8:
+            percentage = (spent / budget) * 100
+            print(f"⚠️ WARNING: {percentage:.1f}% of your budget has been used.")
 
     def view_transactions(self):
         if not self.transactions:
@@ -72,15 +112,15 @@ class FinanceManager:
 
     def show_summary(self):
         income = sum(
-            t["amount"]
-            for t in self.transactions
-            if t["type"] == "income"
+            transaction["amount"]
+            for transaction in self.transactions
+            if transaction["type"] == "income"
         )
 
         expenses = sum(
-            t["amount"]
-            for t in self.transactions
-            if t["type"] == "expense"
+            transaction["amount"]
+            for transaction in self.transactions
+            if transaction["type"] == "expense"
         )
 
         balance = income - expenses
