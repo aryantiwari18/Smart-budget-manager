@@ -1,10 +1,29 @@
+import json
+import os
+
+
 class BudgetManager:
 
     def __init__(self):
-        self.budgets = {}
+        self.data_file = "budgets.json"
+        self.budgets = self.load_budgets()
+
+    def load_budgets(self):
+        if os.path.exists(self.data_file):
+            try:
+                with open(self.data_file, "r") as file:
+                    return json.load(file)
+            except (json.JSONDecodeError, FileNotFoundError):
+                return {}
+
+        return {}
+
+    def save_budgets(self):
+        with open(self.data_file, "w") as file:
+            json.dump(self.budgets, file, indent=4)
 
     def set_budget(self):
-        category = input("Enter budget category: ").strip()
+        category = input("Enter budget category: ").strip().lower()
 
         try:
             amount = float(input("Enter budget amount: "))
@@ -13,8 +32,10 @@ class BudgetManager:
                 print("Budget must be greater than zero.")
                 return
 
-            self.budgets[category.lower()] = amount
-            print(f"Budget set successfully for {category}.")
+            self.budgets[category] = amount
+            self.save_budgets()
+
+            print(f"Budget set successfully for {category.title()}.")
 
         except ValueError:
             print("Please enter a valid amount.")
@@ -39,12 +60,12 @@ class BudgetManager:
 
         if spent > budget:
             print(
-                f"⚠️ Budget exceeded for {category.title()}! "
-                f"Budget: ₹{budget:.2f}, Spent: ₹{spent:.2f}"
+                f"⚠️ Budget exceeded for {category.title()}!"
             )
 
         elif spent >= budget * 0.8:
             print(
                 f"⚠️ Warning: You have used "
-                f"{(spent / budget) * 100:.1f}% of your {category.title()} budget."
+                f"{(spent / budget) * 100:.1f}% of your "
+                f"{category.title()} budget."
             )
