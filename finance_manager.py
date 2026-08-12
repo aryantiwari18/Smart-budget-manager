@@ -163,3 +163,23 @@ class FinanceManager:
 
             except ValueError:
                 print("Please enter a valid number.")
+    def monthly_summary(self):
+        monthly_expenses = {}
+
+        for transaction in self.transactions:
+            if transaction["type"] == "expense":
+                month = transaction["date"][:7]
+
+                if month not in monthly_expenses:
+                    monthly_expenses[month] = 0
+
+                monthly_expenses[month] += transaction["amount"]
+
+        if not monthly_expenses:
+            print("No expenses available for monthly analysis.")
+            return
+
+        print("\n===== MONTHLY SPENDING =====")
+
+        for month, amount in sorted(monthly_expenses.items()):
+            print(f"{month} : ₹{amount:.2f}")
