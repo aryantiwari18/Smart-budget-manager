@@ -16,7 +16,8 @@ print("5. Set Budget")
 print("6. View Budgets")
 print("7. Search Expenses")
 print("8. Monthly Spending")
-print("9. Exit")
+print("9. Category Spending")
+print("10. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -44,6 +45,9 @@ print("9. Exit")
     manager.monthly_summary()
 
 elif choice == "9":
+    manager.category_summary()
+
+elif choice == "10":
     print("Thank you for using Smart Budget Manager!")
     break
 
