@@ -109,7 +109,27 @@ class FinanceManager:
                 f"₹{transaction['amount']:.2f} | "
                 f"{transaction['category']}"
             )
+    def search_expenses(self):
+        category = input("Enter category to search: ").strip().lower()
 
+        found = False
+
+        print(f"\n===== EXPENSES: {category.title()} =====")
+
+        for transaction in self.transactions:
+            if (
+                transaction["type"] == "expense"
+                and transaction["category"].lower() == category
+            ):
+                print(
+                    f"{transaction['date']} | "
+                    f"₹{transaction['amount']:.2f} | "
+                    f"{transaction['category']}"
+                )
+                found = True
+
+        if not found:
+            print("No expenses found for this category.")
     def show_summary(self):
         income = sum(
             transaction["amount"]
